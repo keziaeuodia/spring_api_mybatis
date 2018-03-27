@@ -1,10 +1,7 @@
 package mybatis.services;
 
 import mybatis.mappers.WeatherMapper;
-import mybatis.model.weather.AverageHumidity;
-import mybatis.model.weather.Weather;
-import mybatis.model.weather.WeatherList;
-import mybatis.model.weather.WeatherRoot;
+import mybatis.model.weather.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -18,20 +15,50 @@ public class WeatherService {
     @Autowired
     WeatherMapper weatherMapper;
 
-    public WeatherRoot searchWeather(String city) {
+    public WeatherRoot searchWeather(String city, boolean persist) {
 
         String fQuery = "http://api.openweathermap.org/data/2.5/forecast?q="+city+"&APPID=";
 
         WeatherRoot list = restTemplate.getForObject(
                 fQuery, WeatherRoot.class);
+        
+        if (persist){
+            saveWeatherData(list,city);
+        }
 
         return list;
     }
 
+    public WeatherSummary[] getAllWeather(){
+        return weatherMapper.getAllWeather();
+    }
+
+    private void saveWeatherData(WeatherRoot list, String city) {
+
+        WeatherSummary obj = new WeatherSummary();
+
+        obj.setCity(city);
+        obj.setDatetime(list.getList()[0].getDt());
+        obj.setHumidity(list.getList()[0].getMain().getHumidity());
+        obj.setTemp(list.getList()[0].getMain().getTemp());
+
+        weatherMapper.insertWeather(obj);
+
+    }
+
+    public String deleteWeatherDataByCity(String city){
+        weatherMapper.deleteWeatherDataByCity(city);
+        return city;
+    }
+
+    public void updateTempById(int id, double temp){
+        weatherMapper.updateTempById(temp, id);
+    }
+
     public AverageHumidity averageHumidity(String city1, String city2){
 
-        WeatherRoot response1 = searchWeather(city1);
-        WeatherRoot response2 = searchWeather(city2);
+        WeatherRoot response1 = searchWeather(city1, false);
+        WeatherRoot response2 = searchWeather(city2, false);
 
         double sum1 = 0, sum2 = 0;
 
