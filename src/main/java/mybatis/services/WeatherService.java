@@ -29,11 +29,21 @@ public class WeatherService {
         return list;
     }
 
+//    public WeatherRoot searchWeather(String city) {
+//
+//        String fQuery = "http://api.openweathermap.org/data/2.5/forecast?q="+city+"&APPID=";
+//
+//        WeatherRoot list = restTemplate.getForObject(
+//                fQuery, WeatherRoot.class);
+//
+//        return list;
+//    }
+
     public WeatherSummary[] getAllWeather(){
         return weatherMapper.getAllWeather();
     }
 
-    private void saveWeatherData(WeatherRoot list, String city) {
+    public void saveWeatherData(WeatherRoot list, String city) {
 
         WeatherSummary obj = new WeatherSummary();
 
@@ -51,8 +61,9 @@ public class WeatherService {
         return city;
     }
 
-    public void updateTempById(int id, double temp){
-        weatherMapper.updateTempById(temp, id);
+    public WeatherSummary updateById(WeatherSummary weather, String id){
+        weatherMapper.updateTempById(weather);
+        return weatherMapper.findweather(id);
     }
 
     public AverageHumidity averageHumidity(String city1, String city2){
@@ -79,4 +90,12 @@ public class WeatherService {
         return avg;
     }
 
+    public WeatherSummary findWeather(String id) {
+        return weatherMapper.findweather(id);
+    }
+
+    public WeatherSummary insertWeather(WeatherSummary weather) {
+        weatherMapper.insertWeather(weather);
+        return weatherMapper.findLatestWeather();
+    }
 }
