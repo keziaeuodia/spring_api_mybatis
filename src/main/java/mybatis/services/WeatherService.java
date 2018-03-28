@@ -21,26 +21,12 @@ public class WeatherService {
 
         WeatherRoot list = restTemplate.getForObject(
                 fQuery, WeatherRoot.class);
-        
+
         if (persist){
             saveWeatherData(list,city);
         }
 
         return list;
-    }
-
-//    public WeatherRoot searchWeather(String city) {
-//
-//        String fQuery = "http://api.openweathermap.org/data/2.5/forecast?q="+city+"&APPID=";
-//
-//        WeatherRoot list = restTemplate.getForObject(
-//                fQuery, WeatherRoot.class);
-//
-//        return list;
-//    }
-
-    public WeatherSummary[] getAllWeather(){
-        return weatherMapper.getAllWeather();
     }
 
     public void saveWeatherData(WeatherRoot list, String city) {
@@ -54,6 +40,19 @@ public class WeatherService {
 
         weatherMapper.insertWeather(obj);
 
+    }
+
+    public WeatherSummary[] getAllWeather(){
+        return weatherMapper.getAllWeather();
+    }
+
+    public WeatherSummary findWeather(String id) {
+        return weatherMapper.findweather(id);
+    }
+
+    public WeatherSummary insertWeather(WeatherSummary weather) {
+        weatherMapper.insertWeather(weather);
+        return weatherMapper.findLatestWeather();
     }
 
     public String deleteWeatherDataByCity(String city){
@@ -90,12 +89,4 @@ public class WeatherService {
         return avg;
     }
 
-    public WeatherSummary findWeather(String id) {
-        return weatherMapper.findweather(id);
-    }
-
-    public WeatherSummary insertWeather(WeatherSummary weather) {
-        weatherMapper.insertWeather(weather);
-        return weatherMapper.findLatestWeather();
-    }
 }

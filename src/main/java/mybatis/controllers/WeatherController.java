@@ -1,6 +1,7 @@
 package mybatis.controllers;
 
 import mybatis.model.weather.AverageHumidity;
+import mybatis.model.weather.WeatherRoot;
 import mybatis.model.weather.WeatherSummary;
 import mybatis.services.WeatherService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,15 +15,20 @@ public class WeatherController {
     @Autowired
     WeatherService weatherService;
 
-//    @RequestMapping("/search")
-//    public WeatherRoot searchList(@RequestParam(value="q") String city,
-//                                  @RequestParam(value="persist", defaultValue = "false") boolean persist) {
-//        return weatherService.searchWeather(city, persist);
-//    }
+    @RequestMapping("/search")
+    public WeatherRoot searchList(@RequestParam(value="q") String city,
+                                  @RequestParam(value="persist", defaultValue = "false") boolean persist) {
+        return weatherService.searchWeather(city, persist);
+    }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     public WeatherSummary find (@PathVariable(value ="id") String id){
         return weatherService.findWeather(id);
+    }
+
+    @RequestMapping("/")
+    public WeatherSummary[] showAll (){
+        return weatherService.getAllWeather();
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/")
