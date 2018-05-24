@@ -1,0 +1,5 @@
+.idea/
+gs-rest-service.iml
+*.iml
+out/
+target/
