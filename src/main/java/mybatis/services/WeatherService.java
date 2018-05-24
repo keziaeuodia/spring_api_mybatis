@@ -17,7 +17,7 @@ public class WeatherService {
 
     public WeatherRoot searchWeather(String city, boolean persist) {
 
-        String fQuery = "http://api.openweathermap.org/data/2.5/forecast?q="+city+"&APPID=";
+        String fQuery = "http://api.openweathermap.org/data/2.5/forecast?q="+city+"&APPID=7eea0a6ed25d2dd74c629a6240ba6025";
 
         WeatherRoot list = restTemplate.getForObject(
                 fQuery, WeatherRoot.class);
